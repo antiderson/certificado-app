@@ -1,0 +1,40 @@
+.container {
+    /* display: flex; */
+    height: 100%;
+    }
+
+.form {
+    flex: 1;
+}
+
+.dropdown {
+    display: flex;
+    padding: 9px 27px;
+    gap: 61px;
+    border-radius: 45px;
+    border-width: 0px;
+    background: #FFF;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+
+    color: #404040;
+    font-family: 'Poppins', sans-serif;
+    font-size: 19px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.certificateContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+
+    width: 100%;
+    height: 100%;
+
+    border-radius: 20px;
+
+    padding: 20px;
+}
