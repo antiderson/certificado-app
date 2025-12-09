@@ -14,6 +14,4 @@ async function protegerRota() {
         window.location.href = "Login.html";
     }
 }
-
-// Executa ao carregar a página
 protegerRota();
