@@ -1,0 +1,48 @@
+.container {
+    display: flex;
+    height: 150px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.titlediv {
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    height: 15%;
+    width: 85%;
+    flex-direction: row;
+
+}
+
+.text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 40px;
+    color: #7a7a7a;
+    font-weight: 400;
+    display: inline-flex;
+    padding: 24px 38px 24px 38px;
+    justify-content: center;
+    align-items: center;
+
+
+
+
+    border-radius: 45px;
+    background: #FFF;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.btn {
+    border-width: 0;
+    border-radius: 10px;
+    background: #FFF;
+    box-shadow: 2.627px 3.941px 5.255px 0 rgba(0, 0, 0, 0.25);
+    display: flex;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    aspect-ratio: 1/1;
+}

@@ -1,0 +1,6 @@
+.container{
+  width: 85vmax;
+  height: 100%;
+  align-items: center;
+  display: flex;
+}

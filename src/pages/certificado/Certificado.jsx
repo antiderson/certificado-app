@@ -1,3 +1,11 @@
-export  default function Certificado() {
-    return <h1>Gerar certificado</h1>
+import styles from './index.module.css';
+import CardCertificado from '../../components/cardCertificado/CardCertificado';
+
+
+export default function Certificado() {
+    return (
+        <div className={styles.container}>
+            <CardCertificado />
+        </div>
+    )
 }
