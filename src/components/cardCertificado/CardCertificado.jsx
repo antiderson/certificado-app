@@ -1,13 +1,13 @@
 import { useState, useRef } from "react";
-// import "./CardCertificado.css";
 import styles from './index.module.css';
 import imgEspecialidade from "../../assets/certificado_especialidade_antigoN.png";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { registrarLog } from "../../services/registerLogs.js";
 
 export default function CardCertificado() {
 
-const [form, setForm] = useState({
+    const [form, setForm] = useState({
         Nome: '',
         Especialidades: '',
     });
@@ -17,7 +17,7 @@ const [form, setForm] = useState({
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-     const captureRef = useRef(null);
+    const captureRef = useRef(null);
 
     const gerarPDF = async () => {
         const element = captureRef.current;
@@ -39,9 +39,8 @@ const [form, setForm] = useState({
         const pageHeight = pdf.internal.pageSize.getHeight();
 
         pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight);
-        // pdf.save('certificado_especialidade.pdf');
         pdf.save(`Especialidade ${form.Nome}.pdf`);
-
+        await registrarLog(form.Nome, form.Especialidades);
     }
 
     return (
@@ -53,8 +52,7 @@ const [form, setForm] = useState({
                     placeholder="Nome"
                     value={form.Nome}
                     onChange={handleChange}
-                    className={styles.input}
-                />
+                    className={styles.input} />
                 <label className={styles.inputlabel}>Especialidades</label>
                 <input
                     name="Especialidades"
@@ -66,12 +64,10 @@ const [form, setForm] = useState({
                             setForm({ ...form, Especialidades: text });
                         }
                     }}
-                    className={styles.input}
-                />
+                    className={styles.input}/>
                 <button type="button" onClick={gerarPDF} className={styles.button}>
                     Gerar PDF
                 </button>
-
             </form>
             <div className={styles.previewBox} ref={captureRef}>
                 <img src={imgEspecialidade} alt="Certificado Especialidade" width="900" />
@@ -81,7 +77,7 @@ const [form, setForm] = useState({
 
                 <div className={styles.especialidade} style={{ textTransform: 'uppercase' }}>
                     <span className={styles.label}>
-                        concluiu a(s) especialidade(s) de: 
+                        concluiu a(s) especialidade(s) de:
                     </span>
                     <span className={styles.valor}>
                         {` `}  {/* Faz com que o input começe com um espaço */}
