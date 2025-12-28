@@ -1,8 +1,7 @@
-import { useLocation } from 'react-router';
-import styles from './index.module.css';
 import { SignOutIcon } from "@phosphor-icons/react";
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '../../services/supabaseClient';
+import styles from './index.module.css';
 
 const titles = {
     '/certificado': 'Gerar Certificado',
@@ -17,7 +16,7 @@ export default function Header() {
     const title = titles[location.pathname] || 'Gerar Certificado';
     const btnClick = async () => {
         await supabase.auth.signOut();
-        navigate("/login");
+        navigate("/");
         window.location.reload();
     }
     return (

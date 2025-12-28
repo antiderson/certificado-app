@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { NavLink } from "react-router-dom";
 import styles from "./index.module.css";
 import { CertificateIcon, NotepadIcon, DownloadSimpleIcon } from "@phosphor-icons/react";
 
@@ -34,7 +34,7 @@ export default function BottomNav() {
                 )}
             </NavLink>
             <NavLink
-                to="/exportar-csv"
+                to="/export"
                 className={({ isActive }) =>
                     `${baseStyle} ${isActive ? activeStyle : inactiveStyle}`
                 }
