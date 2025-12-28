@@ -1,29 +1,39 @@
 
+// import { BrowserRouter } from 'react-router-dom';
+// import { Routes, Route } from 'react-router';
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+
+
+import ProtectedRouter from '../src/components/protectedRouter/ProtectedRouter';
 import './App.css';
-import Certificado from './pages/certificado/Certificado'
-import Registros from './pages/registros/Registros';
-import ExportCsv from './pages/exportCsv/ExportCsv';
-import BottonNav from './components/bottomNav/BottonNav';
-import { Route, Routes } from 'react-router';
-import Home from './pages/home/home';
-import { useEffect } from "react";
-import { supabase } from "./services/supabaseClient";
+import { routes } from './services/routes';
 
 function App() {
-
-  useEffect(() => {
-    async function check() {
-      const { data } = await supabase.auth.getUser();
-      if (!data.user) window.location.href = "/Login.html";
-    }
-    check();
-  }, []);
-
   return (
-    <>
-      <Home />
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        {
+          routes.map((route) => (
+            <Route
+              key={route.path}
+              path={route.path}
+              element={
+                route.isPrivate ? (
+                  <ProtectedRouter>
+                    {route.element}
+                  </ProtectedRouter>
+                ) : (
+                  route.element
+                )
+              }
+            />
+          ))
+        }
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App
