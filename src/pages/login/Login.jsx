@@ -1,8 +1,9 @@
 import styles from './index.module.css';
 import logo from '../../assets/Logo.png';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { supabase } from '../../services/supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import { Toast } from 'primereact/toast';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -10,58 +11,61 @@ export default function Login() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-
-    // console.log("SUPABASE URL:", import.meta.env.VITE_SUPABASE_URL);
-    // console.log("SUPABASE KEY:", import.meta.env.VITE_SUPABASE_ANON_KEY);
+    const toast = useRef(null);
 
 
-    async function handleLogin(e){
+    const handleLogin = async (e) => {
         e.preventDefault();
-        setLoading(true);
-        setError(null);
 
-       
-
-
-        const {data, error} = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
-
-        setLoading(false);
-
-        if(error){
-            setError(error.message);
+        if (!password || !email) {
+            toast.current?.show({ severity: 'error', summary: 'Atenção', detail: 'Por favor, verifique o e-mail e senha inseridos', life: 5000 });
             return;
         }
 
-        //se o login funfar
-        // window.location.href = '/dashboard';
-        navigate('/environment');
-    }
+        try {
+            setLoading(true);
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
 
+            if (error) {
+                toast.current?.show({ severity: 'error', summary: 'Atenção', detail: error.message, life: 5000 });
+                return;
+            }
+            toast.current?.show({ severity: 'success', summary: 'Sucesso', detail: 'Login realizado com sucesso!', life: 3000 });
+            setTimeout(() => {
+                navigate('/environment');
+            }, 3000);
+        }
+        catch (err) {
+            toast.current?.show({ severity: 'error', summary: 'Erro inesperado', detail: "Tente Novamente mais tarde", life: 5000 });
+        } finally {
+            setLoading(false);
+        }
+    }
     return (
         <div className={styles.container}>
+            <Toast ref={toast} position='top-center' />
             <div className={styles.banner} />
             <div className={styles.box}>
                 <form action="" className={styles.form} onSubmit={handleLogin}>
-                    <img src={logo} alt="logo do clube"  style={{height:'35%'}}/>
-                    <div style={{height: '20%', width:'80%', display:'flex', justifyContent:"space-between", flexDirection:'column'}}>
+                    <img src={logo} alt="logo do clube" style={{ height: '35%' }} />
+                    <div style={{ height: '20%', width: '80%', display: 'flex', justifyContent: "space-between", flexDirection: 'column' }}>
                         <input type="email"
-                         placeholder="E-mail"
-                         className={styles.input}
-                         onChange={e => setEmail(e.target.value)} />
-                        <input type="password" 
-                        placeholder="Senha" 
-                        className={styles.input} 
-                        onChange={e => setPassword(e.target.value)}/>
+                            placeholder="E-mail"
+                            className={styles.input}
+                            onChange={e => setEmail(e.target.value)} />
+                        <input type="password"
+                            placeholder="Senha"
+                            className={styles.input}
+                            onChange={e => setPassword(e.target.value)} />
                     </div>
-                    <button type="submit" 
-                    className={styles.btnLog}
-                    disabled={loading}>
-                        {loading? "Entrando...": "Entrar"}</button>
+                    <button type="submit" disabled={loading} className={styles.btnLog}>
+                        {loading ? 'Entrando...' : 'Entrar'}
+                    </button>
                 </form>
-                {error && <p style={{color: 'red'}}>{error}</p>}
+                {error && <p style={{ color: 'red' }}>{error}</p>}
             </div>
         </div>
     )

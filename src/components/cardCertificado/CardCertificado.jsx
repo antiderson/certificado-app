@@ -4,9 +4,10 @@ import imgEspecialidade from "../../assets/certificado_especialidade_antigoN.png
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { registrarLog } from "../../services/registerLogs.js";
+import { Toast } from 'primereact/toast';
 
 export default function CardCertificado() {
-
+    const toast = useRef(null);
     const [form, setForm] = useState({
         Nome: '',
         Especialidades: '',
@@ -20,6 +21,12 @@ export default function CardCertificado() {
     const captureRef = useRef(null);
 
     const gerarPDF = async () => {
+
+        if (!form.Nome || !form.Especialidades) {
+            toast.current?.show({ severity: 'error', summary: 'Atenção', detail: 'Por favor, preencha todos os campos antes de gerar o PDF', life: 5000 });
+            return;
+        }
+
         const element = captureRef.current;
 
         const canvas = await html2canvas(element, {
@@ -45,6 +52,7 @@ export default function CardCertificado() {
 
     return (
         <div className={styles.formcontainer}>
+            <Toast ref={toast} position='top-center' />
             <form className={styles.form}>
                 <label className={styles.inputlabel}>Nome</label>
                 <input
@@ -64,7 +72,7 @@ export default function CardCertificado() {
                             setForm({ ...form, Especialidades: text });
                         }
                     }}
-                    className={styles.input}/>
+                    className={styles.input} />
                 <button type="button" onClick={gerarPDF} className={styles.button}>
                     Gerar PDF
                 </button>

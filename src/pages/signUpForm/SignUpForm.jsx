@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { supabase } from "../../services/supabaseClient"; // ajuste o caminho
+import { useState, useRef } from "react";
+import { supabase } from "../../services/supabaseClient";
+import { Toast } from 'primereact/toast';
 
 export default function SignupForm() {
     const [name, setName] = useState("");
@@ -7,42 +8,48 @@ export default function SignupForm() {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
+    const toast = useRef(null);
 
-    async function handleSignup(e) {
+    const handleSignup = async (e) => {
         e.preventDefault();
-        setLoading(true);
-        setMessage("");
 
-        const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-                data: {
-                    name: name
-                }
-            }
-        });
-
-        // console.log("DATA:", data);
-        // console.log("ERROR:", error);
-
-        if (error) {
-            setMessage(error.message);
-            setLoading(false);
+        if (!name || !email || !password) {
+            toast.current?.show({ severity: 'error', summary: 'Atenção', detail: 'Por favor, preencha todos os campos', life: 5000 });
             return;
         }
 
-        setMessage("Conta criada com sucesso!");
-        setLoading(false);
+        try {
+            setLoading(true);
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: {
+                        name: name
+                    }
+                }
+            });
 
-        setTimeout(() => {
-            window.location.href = "/"; // redireciona para a página de login
-        }, 3000);
-        // console.log(data.user.user_metadata.name);
+            if (error) {
+                toast.current?.show({ severity: 'error', summary: 'Atenção', detail: error.message, life: 5000 });
+                setLoading(false);
+                return;
+            }
+            toast.current?.show({ severity: 'success', summary: 'Sucesso', detail: 'Conta criada com sucesso!', life: 3000 });
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 3000);
+        }
+        catch (err) {
+            toast.current?.show({ severity: 'error', summary: 'Erro inesperado', detail: "Tente Novamente mais tarde", life: 5000 });
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
         <form onSubmit={handleSignup} style={styles.form}>
+            <Toast ref={toast} position='bottom-center' />
             <h2>Criar Conta</h2>
 
             <input
@@ -50,7 +57,6 @@ export default function SignupForm() {
                 placeholder="Nome completo"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                required
                 style={styles.input}
             />
 
@@ -59,7 +65,6 @@ export default function SignupForm() {
                 placeholder="E-mail"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
                 style={styles.input}
             />
 
@@ -68,7 +73,6 @@ export default function SignupForm() {
                 placeholder="Senha"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
                 style={styles.input}
             />
 

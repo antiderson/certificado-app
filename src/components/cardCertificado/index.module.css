@@ -1,6 +1,6 @@
-.inputlabel {
+/* .inputlabel {
     font-family: 'Poppins', sans-serif;
-}
+} */
 
 .formcontainer {
     display: flex;
@@ -33,6 +33,7 @@
     font-size: 14px;
     border: 1px solid #cfcfcf;
 }
+
 .nome {
     position: absolute;
     top: 310px;
@@ -42,6 +43,7 @@
     display: inline;
     width: 520px;
     text-align: center;
+    font-family: "Pt Serif", serif;
 }
 
 .previewBox {
