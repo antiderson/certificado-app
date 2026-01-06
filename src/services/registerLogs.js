@@ -1,18 +1,20 @@
 import { supabase } from "./supabaseClient.js";
 
-export async function registrarLog(nome, especialidade) {
+export async function registrarLog(nomeDesbravador, especialidade) {
 
-    const { data: userData, error: userError } = await supabase.auth.getUser();
-    const userId = userData?.user?.id;
+    const { 
+        data: {user},
+        error: userError 
+    } =  await supabase.auth.getUser();
 
-    if (!userId) {
-        console.error("Usuário não autenticado, não foi possível registrar o log.");
+    if(userError || !user){
+        console.error("Erro ao obter usuário:", userError);
         return;
     }
 
     const { error } = await supabase.from("logs").insert({
-        user_id: userId,
-        nome: nome,
+        user_id: user.id,
+        nome: nomeDesbravador,
         especialidade: especialidade
     });
 

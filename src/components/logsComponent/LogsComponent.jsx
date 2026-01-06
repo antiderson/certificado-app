@@ -10,19 +10,20 @@ export default function LogsComponent() {
 
     useEffect(() => {
         async function fetchLogs() {
-            const { data } = await supabase
+            const { data, error } = await supabase
                 .from("logs")
-//                 .select(`
-//     id,
-//     created_at,
-//     nome,
-//     especialidade,
-//     profiles (
-//       name,
-//       email
-//     )
-//   `);
-.select('*');
+                .select(`
+                    id,
+                    created_at,
+                    nome,
+                    especialidade,
+                    profiles (
+                        name,
+                        email
+                    )
+                    `)
+                .order('created_at', { ascending: false });
+
 
             if (error) {
                 console.error("Supabase error:", error);
@@ -37,7 +38,7 @@ export default function LogsComponent() {
 
         fetchLogs();
     }, []);
-    
+
 
     if (loading) return <p>Carregando registros...</p>
     if (error) return <p>{error}</p>
@@ -50,7 +51,7 @@ export default function LogsComponent() {
                 <table className={styles.table}>
                     <thead>
                         <tr>
-                            <th>Nome</th>
+                            <th>Diretoria</th>
                             <th>Desbravador</th>
                             <th>Especialidades</th>
                             <th>Data de Criação</th>
@@ -60,8 +61,8 @@ export default function LogsComponent() {
                     <tbody>
                         {registros.map((registro) => (
                             <tr key={registro.id}>
-                                <td>{registro.user_id}</td>
-                                {/* <td>{registro.profiles?.nome}</td> */}
+
+                                <td>{registro.profiles?.name}</td>
                                 <td>{registro.nome}</td>
                                 <td>{registro.especialidade}</td>
                                 <td>
